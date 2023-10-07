@@ -14,10 +14,11 @@ import java.io.IOException;
 public class Game {
 
     private final TerminalScreen screen;
-    private int x = 20;
-    private int y = 10;
+    Hero hero;
 
     Game() throws IOException {
+        hero = new Hero(10, 10);
+
         TerminalSize terminalSize = new TerminalSize(40, 20);
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
 
@@ -31,24 +32,23 @@ public class Game {
 
     private void draw() throws IOException {
         screen.clear();
-        screen.setCharacter(x, y, TextCharacter.fromCharacter('X')[0]);
+        hero.draw(screen);
         screen.refresh();
     }
 
     private void processKey(KeyStroke key) throws IOException {
-        System.out.println(key);
         switch (key.getKeyType()) {
             case ArrowUp:
-               y--;
+               hero.moveUp();
                break;
             case ArrowDown:
-                y++;
+                hero.moveDown();
                 break;
             case ArrowLeft:
-                x--;
+                hero.moveLeft();
                 break;
             case ArrowRight:
-                x++;
+                hero.moveRight();
                 break;
             case Character:
                 if (key.getCharacter() == 'q') {
