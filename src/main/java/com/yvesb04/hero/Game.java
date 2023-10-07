@@ -30,25 +30,20 @@ public class Game {
         screen.doResizeIfNecessary();   // resize screen if necessary
     }
 
-    private void draw() throws IOException {
-        screen.clear();
-        hero.draw(screen);
-        screen.refresh();
-    }
 
     private void processKey(KeyStroke key) throws IOException {
         switch (key.getKeyType()) {
             case ArrowUp:
-               hero.moveUp();
-               break;
+                moveHero(hero.moveUp());
+                break;
             case ArrowDown:
-                hero.moveDown();
+                moveHero(hero.moveDown());
                 break;
             case ArrowLeft:
-                hero.moveLeft();
+                moveHero(hero.moveLeft());
                 break;
             case ArrowRight:
-                hero.moveRight();
+                moveHero(hero.moveRight());
                 break;
             case Character:
                 if (key.getCharacter() == 'q') {
@@ -58,6 +53,16 @@ public class Game {
                 screen.close();
         }
 
+    }
+
+    private void moveHero(Position position) {
+        hero.setPosition(position);
+    }
+
+    private void draw() throws IOException {
+        screen.clear();
+        hero.draw(screen);
+        screen.refresh();
     }
 
     void run() throws IOException {
