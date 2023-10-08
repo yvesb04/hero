@@ -4,7 +4,6 @@ import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.terminal.Terminal;
 
 public class Hero extends Element {
 
@@ -28,8 +27,9 @@ public class Hero extends Element {
         return new Position(getPosition().getX() + 1, getPosition().getY());
     }
 
+    @Override
     public void draw(TextGraphics graphics) {
-        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
+        graphics.setForegroundColor(TextColor.Factory.fromString("#7dc4e4"));
         graphics.enableModifiers(SGR.BOLD);
         graphics.putString(new TerminalPosition(getPosition().getX() * 2,
                 getPosition().getY() * 2), "\\/");

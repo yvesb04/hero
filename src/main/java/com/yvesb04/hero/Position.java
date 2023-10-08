@@ -1,7 +1,5 @@
 package com.yvesb04.hero;
 
-import java.util.Objects;
-
 public class Position {
     private int x, y;
 

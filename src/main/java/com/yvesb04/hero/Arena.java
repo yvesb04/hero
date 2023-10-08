@@ -5,22 +5,32 @@ import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.screen.TerminalScreen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class Arena {
-    private int width, height;
-    private Hero hero;
-    private List<Wall> walls;
+    private final Hero hero;
+    private final List<Wall> walls;
+    private final List<Coin> coins;
+    public int width, height;
 
     Arena(int width, int height) {
         this.width = width;
         this.height = height;
         this.walls = createWalls();
+        this.coins = createCoins();
         hero = new Hero(10, 10);
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
     }
 
     private List<Wall> createWalls() {
@@ -39,18 +49,32 @@ public class Arena {
         return walls;
     }
 
-    public int getHeight() {
-        return height;
+    private List<Coin> createCoins() {
+        Random random = new Random();
+        ArrayList<Coin> coins = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            coins.add(new Coin(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1));
+        }
+
+        return coins;
     }
 
-    public int getWidth() {
-        return width;
+    private void retrieveCoins() {
+        for (Coin coin : coins) {
+            if (hero.getPosition().equals(coin.getPosition())) {
+                coins.remove(coin);
+                break;
+            }
+        }
     }
+
 
     private void moveHero(Position position) {
         if (canHeroMove(position)) {
             hero.setPosition(position);
         }
+        retrieveCoins();
     }
 
     private boolean canHeroMove(Position position) {
@@ -80,13 +104,16 @@ public class Arena {
     }
 
     public void draw(TextGraphics graphics) {
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
-        graphics.fillRectangle(new TerminalPosition(0, 0), new
-                TerminalSize(width * 2, height * 2), ' ');
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#24273a"));
+        graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width * 2, height * 2), ' ');
 
+
+        for (Coin coin : coins) {
+            coin.draw(graphics);
+        }
         hero.draw(graphics);
-        for (Wall wall :
-                walls) {
+
+        for (Wall wall : walls) {
             wall.draw(graphics);
         }
     }
