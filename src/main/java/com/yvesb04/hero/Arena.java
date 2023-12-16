@@ -9,12 +9,14 @@ import com.googlecode.lanterna.input.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 
 public class Arena {
     private final Hero hero;
     private final List<Wall> walls;
     private final List<Coin> coins;
+    private final List<Monster> monsters;
     public int width, height;
 
     Arena(int width, int height) {
@@ -22,8 +24,11 @@ public class Arena {
         this.height = height;
         this.walls = createWalls();
         this.coins = createCoins();
+        this.monsters = createMonsters();
         hero = new Hero(10, 10);
     }
+
+
 
     public int getHeight() {
         return height;
@@ -60,6 +65,17 @@ public class Arena {
         return coins;
     }
 
+    private List<Monster> createMonsters() {
+        Random random = new Random();
+        ArrayList<Monster> monsters = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            monsters.add(new Monster(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1));
+        }
+
+        return monsters;
+    }
+
     private void retrieveCoins() {
         for (Coin coin : coins) {
             if (hero.getPosition().equals(coin.getPosition())) {
@@ -84,6 +100,12 @@ public class Arena {
             }
         }
         return true;
+    }
+
+    public void moveMonsters(){
+        for(Monster monster : monsters){
+            monster.setPosition(monster.move(this));
+        }
     }
 
     public void processKey(KeyStroke key) {
@@ -116,5 +138,9 @@ public class Arena {
         for (Wall wall : walls) {
             wall.draw(graphics);
         }
+        for (Monster monster: monsters) {
+            monster.draw(graphics);
+        }
+    }
     }
 }
